@@ -11,7 +11,7 @@ meet_vstack_style = {
 
 meet_center_style = {
     "align_items": "top",
-    "bg": "radial-gradient(circle at 22% 11%,rgba(62, 180, 137,.20),hsla(0,5%,100%,0) 19%)",
+    "bg": "linear-gradient(to top, #a8edea 0%, #fed6e3 100%)",
     "overflow": "auto",
     "padding_top": "2.5%",
     "padding_right": "35%",
@@ -84,8 +84,8 @@ def meet():
                     pc.tab(pc.icon(tag="star"), id_="square", color=font_color),
                 ),
                 pc.tab_panels(
-                    pc.tab_panel(get_chat_data()),
-                    pc.tab_panel(get_square_data()),
+                    pc.tab_panel(get_chat_data(), width="558px", height="942px"),
+                    pc.tab_panel(get_square_data(), width="558px", height="942px"),
                 ),
                 border_radius="40px",
                 is_fitted=True,
@@ -103,7 +103,7 @@ def get_square_data():
         return {
             "font_family": "Comic Sans MS",
             "font_size": "0.7em",
-            "box_shadow": "rgba(240, 46, 170, 0.4) 5px 5px, rgba(240, 46, 170, 0.3) 10px 10px",
+            "box_shadow": "rgba(240, 46, 170, 0.4) 5px 5px",
             "border_radius": "20px",
             "padding_left": "8%",
             "padding_right": "8%",
@@ -196,18 +196,15 @@ def get_reply_data(message):
 
 def get_chat_data():
     return pc.vstack(
-        pc.image(
-            src="chat_bg.png",
-            width="100%",
-            height="100%",
-        ),
         pc.input(
             value=State.prompt,
             placeholder="wanna say something?",
-            font_size="10px",
+            font_size="15px",
             on_change=State.set_prompt,
             bg="radial-gradient(circle at 22% 11%,rgba(62, 180, 137,.20),hsla(40,0%,60%,0) 49%)",
             font_color="black",
+            height="300px",
+            top="356px"
         ),
         pc.box(
             pc.button(
@@ -218,18 +215,27 @@ def get_chat_data():
                 width="5em",
                 on_click=[State.submit_chat, State.notice],
                 align="right",
+                top="400px"
             ),
             pc.modal(
                 pc.modal_overlay(
                     pc.modal_content(
                         pc.modal_header("notice"),
                         pc.modal_body("your message has been sent ^_^"),
-                        pc.modal_footer(pc.button("close", on_click=[State.notice, ])),
+                        pc.modal_footer(
+                            pc.button(
+                                "close",
+                                on_click=[
+                                    State.notice,
+                                ],
+                            )
+                        ),
                     )
                 ),
                 is_open=State.show,
             ),
         ),
+        bg="linear-gradient(to top, #a8edea 0%, #fed6e3 100%)",
     )
 
 
