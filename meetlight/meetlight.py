@@ -40,9 +40,11 @@ class State(pc.State):
     def meet_page(self):
         return pc.redirect("/meet")
 
-    def submit_reply(self):
+    def submit_reply(self, uuid, content, color):
         pass
 
+    def submit_reply1(self):
+        pass
 
 def index() -> pc.Component:
     return pc.center(
@@ -103,7 +105,7 @@ def get_square_data():
         }
 
     pc_list = []
-    for message in messages:
+    for message in messages.values():
         pc_list.append(
             pc.list_item(
                 pc.popover(
@@ -148,7 +150,7 @@ def init_reply_footer():
                 bg="#484878",
                 color="white",
                 width="5em",
-                on_click=[State.submit_chat, State.notice],
+                on_click=[State.submit_reply1, State.notice],
                 align="right",
             ),
             pc.modal(
