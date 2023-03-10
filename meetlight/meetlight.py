@@ -1,18 +1,24 @@
-"""Welcome to Pynecone! This file outlines the steps to create a basic app."""
-from pcconfig import config
+import sys
 
 import pynecone as pc
 
-docs_url = "https://pynecone.io/docs/getting-started/introduction"
-filename = f"{config.app_name}/{config.app_name}.py"
+from dao.message import messages
 
-meet_style = {
-    "bg": "white",
-    "padding": "1em",
+meet_vstack_style = {
+    "bg": "#F7F7F7",
+    "padding": "0.2em",
     "border_radius": "40px",
-    "w": "100%",
-    "align_items": "left",
     "font_family": "Silkscreen",
+}
+
+meet_center_style = {
+    "align_items": "top",
+    "bg": "radial-gradient(circle at 22% 11%,rgba(62, 180, 137,.20),hsla(0,5%,100%,0) 19%)",
+    "overflow": "auto",
+    "padding_top": "2.5%",
+    "padding_right": "35%",
+    "padding_left": "35%",
+    "padding_bottom": "2.5%",
 }
 
 
@@ -25,21 +31,22 @@ class State(pc.State):
     image_made = False
 
     def submit(self):
-        pass
+        print(1)
+        sys.exit(1)
 
 
 def index() -> pc.Component:
     return pc.center(
         pc.vstack(
             pc.heading("MeetLight", font_size="2em"),
-            pc.box("Get started by editing ", pc.code(filename, font_size="1em")),
+            pc.box("Get started by editing ", pc.code("filename", font_size="1em")),
             pc.button(
                 pc.icon(tag="arrow_up"),
                 _hover={
                     "opacity": 0.85,
                     "color": "rgb(107,99,246)",
                 },
-                # on_click=home(),
+                on_click=State.submit,
             ),
             pc.button(
                 pc.icon(tag="moon"),
@@ -54,49 +61,80 @@ def index() -> pc.Component:
 
 
 def meet():
+    font_color = "#A585AD"
     return pc.center(
         pc.vstack(
             pc.tabs(
                 pc.tab_list(
-                    pc.tab(pc.icon(tag="spinner"), id_="chat", panel_id="chat_panel"),
-                    pc.tab(pc.icon(tag="star"), id_="square", panel_id="square_panel"),
+                    pc.tab(pc.icon(tag="spinner"), id_="chat", color=font_color),
+                    pc.tab(pc.icon(tag="star"), id_="square", color=font_color),
                 ),
                 pc.tab_panels(
                     pc.tab_panel(get_chat_data()),
                     pc.tab_panel(get_square_data()),
                 ),
-                align="center",
+                border_radius="40px",
                 is_fitted=True,
-                color="white",
                 shadow="lg",
             ),
             font_size="2em",
-            style=meet_style,
+            style=meet_vstack_style,
         ),
-        height="100vh",
-        align_items="top",
-        bg="#ededed",
-        overflow="auto",
-        padding_top="2.5%",
-        padding_right="35%",
-        padding_left="35%",
-        padding_bottom="2.5%",
+        style=meet_center_style,
     )
 
 
 def get_square_data():
+    def get_text_style(color):
+        return {
+            "font_family": "Comic Sans MS",
+            "font_size": "0.7em",
+            "box_shadow": "rgba(240, 46, 170, 0.4) 5px 5px, rgba(240, 46, 170, 0.3) 10px 10px",
+            "border_radius": "20px",
+            "padding_left": "5%",
+            "padding_right": "5%",
+            "padding_top": "1%",
+            "padding_bottom": "1%",
+            "border_color": color,
+            "border_width": 5,
+            "background_image": "linear-gradient(271.68deg, #EE756A 0.75%, #756AEE 88.52%)",
+            "background_clip": "text",
+        }
+
+    pc_list = []
+    for message in messages:
+        pc_list.append(
+            pc.list_item(message["content"], style=get_text_style(message["color"]))
+        )
     return pc.list(
-        pc.list_item("Example 1"),
-        pc.list_item("Example 2"),
-        pc.list_item("Example 3"),
+        *pc_list,
+        spacing=".5em",
     )
 
 
 def get_chat_data():
     return pc.vstack(
-        pc.image(src="assets/chat_bg.png", width="100px", height="auto"),
-        pc.input(placeholder="Enter a prompt..", on_blur=State.set_prompt),
-        bg="radial-gradient(circle at 22% 11%,rgba(62, 180, 137,.20),hsla(0,0%,100%,0) 19%)",
+        pc.image(
+            src="chat_bg.png",
+            width="100%",
+            height="100%",
+        ),
+        pc.input(
+            placeholder="How are you feeling now",
+            font_size="10px",
+            on_blur=State.set_prompt,
+            bg="radial-gradient(circle at 22% 11%,rgba(62, 180, 137,.20),hsla(40,0%,60%,0) 49%)",
+            font_color="black",
+        ),
+        pc.button(
+            pc.icon(tag="check"),
+            font_size="0.3em",
+            bg="#484878",
+            color="white",
+            width="5em",
+            on_click=State.submit,
+            align="right",
+        ),
     )
 
 
@@ -107,6 +145,6 @@ app = pc.App(
         "https://fonts.googleapis.com/css2?family=Silkscreen&display=swap",
     ],
 )
-app.add_page(index)
-app.add_page(meet)
+app.add_page(index, title="MeetLight")
+app.add_page(meet, title="MeetLight")
 app.compile()
