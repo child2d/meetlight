@@ -30,6 +30,16 @@ class State(pc.State):
     show: bool = False
     show_reply: bool = False
 
+    translation = "change color"
+    is_change_color = False
+
+    def change_color(self):
+        self.is_change_color = not self.is_change_color
+        if self.is_change_color:
+            self.translation = "good color"
+        else:
+            self.translation = "change color"
+
     def change(self):
         self.show_reply = not self.show_reply
 
@@ -180,20 +190,23 @@ def get_reply_data(message):
     for reply in message.get("reply", []):
         replies.append(
             pc.list_item(
-                pc.cond(
-                    State.show_reply,
-                    pc.badge(
-                        reply["content"],
-                        color_scheme=reply["color"],
-                        font_size="1em",
+                pc.text(
+                    pc.cond(
+                        State.show_reply,
+                        pc.badge(
+                            reply["content"],
+                            color_scheme=reply["color"],
+                            font_size="1em",
+                        ),
+                        pc.badge(
+                            "click to reveal",
+                            color_scheme=reply["color"],
+                            font_size="1em",
+                        ),
                     ),
-                    pc.badge(
-                        "click to reveal",
-                        color_scheme=reply["color"],
-                        font_size="1em",
-                    ),
+                    on_click=State.change,
                 ),
-                on_click=State.change,
+                pc.button(State.translation, font_size="1em", on_click=State.change_color),
             )
         )
     return pc.list(*replies, spacing=".2em")
