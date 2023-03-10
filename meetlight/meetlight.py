@@ -11,7 +11,8 @@ meet_vstack_style = {
 
 meet_center_style = {
     "align_items": "top",
-    "bg": "radial-gradient(circle at 22% 11%,rgba(62, 180, 137,.20),hsla(0,5%,100%,0) 19%)",
+    "bg": "linear-gradient(90deg, rgba(253,92,29,1) 12%, rgba(58,87,180,1) 48%, rgba(69,252,105,1) 100%)",
+    # "bg": "radial-gradient(circle at 22% 11%,rgba(62, 180, 137,.20),hsla(0,5%,100%,0) 19%)",
     "overflow": "auto",
     "padding_top": "2.5%",
     "padding_right": "35%",
@@ -35,14 +36,18 @@ class State(pc.State):
     def submit_chat(self):
         add_message(self.prompt, "red")
 
+    def meet_page(self):
+        return pc.redirect("/meet")
+
 
 def index() -> pc.Component:
     return pc.center(
         pc.vstack(
             pc.box(
-                pc.image(src="lightgate.jpg", width="600px", height="auto"),
+            pc.image(src="lightgate.jpg", width="600px", height="auto"),
             spacing="1.5em",
             font_size="2em",
+                on_click=State.meet_page
         ),
         ),
         bg="#040D13",
@@ -168,5 +173,5 @@ app = pc.App(
     ],
 )
 app.add_page(index, title="MeetLight")
-app.add_page(meet, title="MeetLight")
+app.add_page(meet, "/meet", title="MeetLight")
 app.compile()

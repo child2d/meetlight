@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "meetlight"
+version = "0.1.0"
+description = ""
+authors = ["wangwei <wei.wang@shaoke.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pynecone = "^0.1.19"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
