@@ -1,8 +1,6 @@
-import sys
-
 import pynecone as pc
 
-from dao.message import messages
+from dao.message import messages, add_message
 
 meet_vstack_style = {
     "bg": "#F7F7F7",
@@ -26,13 +24,16 @@ class State(pc.State):
     """The app state."""
 
     prompt = ""
-    image_url = ""
-    image_processing = False
-    image_made = False
+    show: bool = False
 
-    def submit(self):
-        print(1)
-        sys.exit(1)
+    def notice(self):
+        self.show = not self.show
+
+    def color_change(self):
+        pass
+
+    def submit_chat(self):
+        add_message(self.prompt, "red")
 
 
 def index() -> pc.Component:
@@ -46,7 +47,7 @@ def index() -> pc.Component:
                     "opacity": 0.85,
                     "color": "rgb(107,99,246)",
                 },
-                on_click=State.submit,
+                on_click=State.submit_chat,
             ),
             pc.button(
                 pc.icon(tag="moon"),
@@ -91,9 +92,9 @@ def get_square_data():
             "font_size": "0.7em",
             "box_shadow": "rgba(240, 46, 170, 0.4) 5px 5px, rgba(240, 46, 170, 0.3) 10px 10px",
             "border_radius": "20px",
-            "padding_left": "5%",
-            "padding_right": "5%",
-            "padding_top": "1%",
+            "padding_left": "8%",
+            "padding_right": "8%",
+            "padding_top": "3%",
             "padding_bottom": "1%",
             "border_color": color,
             "border_width": 5,
@@ -104,7 +105,25 @@ def get_square_data():
     pc_list = []
     for message in messages:
         pc_list.append(
-            pc.list_item(message["content"], style=get_text_style(message["color"]))
+            pc.list_item(
+                pc.popover(
+                    pc.popover_trigger(
+                        pc.button(
+                            pc.stat(
+                                pc.stat_label(message["content"]),
+                                pc.stat_help_text(message["created_at"], color="gray"),
+                                style=get_text_style(message["color"]),
+                            )
+                        )
+                    ),
+                    pc.popover_content(
+                        pc.popover_header("Confirm"),
+                        pc.popover_body("Do you want to confirm example?"),
+                        pc.popover_footer(pc.text("Footer text.")),
+                        pc.popover_close_button(),
+                    ),
+                )
+            )
         )
     return pc.list(
         *pc_list,
@@ -120,20 +139,32 @@ def get_chat_data():
             height="100%",
         ),
         pc.input(
-            placeholder="How are you feeling now",
+            placeholder="wanna say something?",
             font_size="10px",
-            on_blur=State.set_prompt,
+            on_change=State.set_prompt,
             bg="radial-gradient(circle at 22% 11%,rgba(62, 180, 137,.20),hsla(40,0%,60%,0) 49%)",
             font_color="black",
         ),
-        pc.button(
-            pc.icon(tag="check"),
-            font_size="0.3em",
-            bg="#484878",
-            color="white",
-            width="5em",
-            on_click=State.submit,
-            align="right",
+        pc.box(
+            pc.button(
+                pc.icon(tag="check"),
+                font_size="0.3em",
+                bg="#484878",
+                color="white",
+                width="5em",
+                on_click=[State.submit_chat, State.notice],
+                align="right",
+            ),
+            pc.modal(
+                pc.modal_overlay(
+                    pc.modal_content(
+                        pc.modal_header("notice"),
+                        pc.modal_body("your message has been sent ^_^"),
+                        pc.modal_footer(pc.button("Close", on_click=State.notice)),
+                    )
+                ),
+                is_open=State.show,
+            ),
         ),
     )
 

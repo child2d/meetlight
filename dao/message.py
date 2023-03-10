@@ -14,7 +14,7 @@ def add_message(content, color):
         {
             "content": content,
             "color": color,
-            "created_at": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "created_at": datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
         }
     )
     with open("chat_history.json", "w", encoding="utf-8") as f:
