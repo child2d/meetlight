@@ -144,7 +144,7 @@ def init_reply_footer():
         pc.input(
             placeholder="wanna say something?",
             font_size="10px",
-            on_change=State.set_reply_msg,
+            # on_change=State.set_reply_msg,
             bg="radial-gradient(circle at 22% 11%,rgba(62, 180, 137,.20),hsla(40,0%,60%,0) 49%)",
             font_color="black",
         ),
