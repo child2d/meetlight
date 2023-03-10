@@ -39,25 +39,16 @@ class State(pc.State):
 def index() -> pc.Component:
     return pc.center(
         pc.vstack(
-            pc.heading("MeetLight", font_size="2em"),
-            pc.box("Get started by editing ", pc.code("filename", font_size="1em")),
-            pc.button(
-                pc.icon(tag="arrow_up"),
-                _hover={
-                    "opacity": 0.85,
-                    "color": "rgb(107,99,246)",
-                },
-                on_click=State.submit_chat,
-            ),
-            pc.button(
-                pc.icon(tag="moon"),
-                on_click=pc.toggle_color_mode,
-            ),
+            pc.box(
+                pc.image(src="lightgate.jpg", width="600px", height="auto"),
             spacing="1.5em",
             font_size="2em",
         ),
-        bg="#ededed",
-        padding_top="10%",
+        ),
+        bg="#040D13",
+        padding_top="1%",
+        padding_bottom="1%",
+
     )
 
 
