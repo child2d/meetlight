@@ -28,6 +28,20 @@ class State(pc.State):
     reply_msg = ""
     square_reload = False
     show: bool = False
+    show_reply: bool = False
+
+    translation = "change color"
+    is_change_color = False
+
+    def change_color(self):
+        self.is_change_color = not self.is_change_color
+        if self.is_change_color:
+            self.translation = "good color"
+        else:
+            self.translation = "change color"
+
+    def change(self):
+        self.show_reply = not self.show_reply
 
     def notice(self):
         self.show = not self.show
@@ -55,16 +69,15 @@ def index() -> pc.Component:
     return pc.center(
         pc.vstack(
             pc.box(
-            pc.image(src="lightgate.jpg", width="600px", height="auto"),
-            spacing="1.5em",
-            font_size="2em",
-            on_click=State.meet_page
-        ),
+                pc.image(src="lightgate.jpg", width="600px", height="auto"),
+                spacing="1.5em",
+                font_size="2em",
+                on_click=State.meet_page,
+            ),
         ),
         bg="#040D13",
         padding_top="1%",
         padding_bottom="1%",
-
     )
 
 
@@ -135,7 +148,7 @@ def get_square_data():
         )
     return pc.list(
         *pc_list,
-        spacing=".5em",
+        spacing="1em",
     )
 
 
@@ -177,12 +190,23 @@ def get_reply_data(message):
     for reply in message.get("reply", []):
         replies.append(
             pc.list_item(
-                pc.badge(
-                    reply["content"],
-                    variant="solid",
-                    color_scheme=reply["color"],
-                    font_size="1em",
+                pc.text(
+                    pc.cond(
+                        State.show_reply,
+                        pc.badge(
+                            reply["content"],
+                            color_scheme=reply["color"],
+                            font_size="1em",
+                        ),
+                        pc.badge(
+                            "click to reveal",
+                            color_scheme=reply["color"],
+                            font_size="1em",
+                        ),
+                    ),
+                    on_click=State.change,
                 ),
+                pc.button(State.translation, font_size="1em", on_click=State.change_color),
             )
         )
     return pc.list(*replies, spacing=".2em")
@@ -199,7 +223,7 @@ def get_chat_data():
             bg="#F7F7F7",
             font_color="black",
             height="300px",
-            top="356px"
+            top="356px",
         ),
         pc.box(
             pc.button(
@@ -210,7 +234,7 @@ def get_chat_data():
                 width="5em",
                 on_click=[State.submit_chat, State.notice],
                 align="right",
-                top="400px"
+                top="400px",
             ),
             pc.modal(
                 pc.modal_overlay(
