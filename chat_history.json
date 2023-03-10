@@ -8,18 +8,20 @@
         "content": "\u4f60\u597d",
         "color": "green",
         "created_at": "2023-03-09 22:33"
-      },
-      {
-        "content": "\u6211\u662f\u5ae9\u53e0",
-        "color": "yellow",
-        "created_at": "2023-03-09 22:43"
       }
     ]
   },
   "e9ef25b5ec7d4cd1885eef12f43648b7": {
     "content": "hi",
-    "color": "blue",
-    "created_at": "2023-03-09 22:32"
+    "color": "yellow",
+    "created_at": "2023-03-09 22:32",
+    "reply": [
+      {
+        "content": "so sad",
+        "color": "blue",
+        "created_at": "2023-03-09 22:33"
+      }
+    ]
   },
   "386eec7425184475b34da968a1c578ee": {
     "content": "\u4f60\u731c",
