@@ -40,7 +40,9 @@ class State(pc.State):
 
     def submit_chat(self):
         add_message(self.prompt, "red")
-        self.prompt = ""
+
+    def meet_page(self):
+        return pc.redirect("/meet")
 
     def submit_reply(self, uuid, content, color):
         pass
@@ -52,25 +54,17 @@ class State(pc.State):
 def index() -> pc.Component:
     return pc.center(
         pc.vstack(
-            pc.heading("MeetLight", font_size="2em"),
-            pc.box("Get started by editing ", pc.code("filename", font_size="1em")),
-            pc.button(
-                pc.icon(tag="arrow_up"),
-                _hover={
-                    "opacity": 0.85,
-                    "color": "rgb(107,99,246)",
-                },
-                on_click=State.submit_chat,
-            ),
-            pc.button(
-                pc.icon(tag="moon"),
-                on_click=pc.toggle_color_mode,
-            ),
+            pc.box(
+            pc.image(src="lightgate.jpg", width="600px", height="auto"),
             spacing="1.5em",
             font_size="2em",
+            on_click=State.meet_page
         ),
-        bg="#ededed",
-        padding_top="10%",
+        ),
+        bg="#040D13",
+        padding_top="1%",
+        padding_bottom="1%",
+
     )
 
 
@@ -201,7 +195,8 @@ def get_chat_data():
             placeholder="wanna say something?",
             font_size="15px",
             on_change=State.set_prompt,
-            bg="radial-gradient(circle at 22% 11%,rgba(62, 180, 137,.20),hsla(40,0%,60%,0) 49%)",
+            # bg="radial-gradient(circle at 22% 11%,rgba(62, 180, 137,.20),hsla(40,0%,60%,0) 49%)",
+            bg="#F7F7F7",
             font_color="black",
             height="300px",
             top="356px"
@@ -235,7 +230,8 @@ def get_chat_data():
                 is_open=State.show,
             ),
         ),
-        bg="linear-gradient(to top, #a8edea 0%, #fed6e3 100%)",
+        # bg="linear-gradient(to top, #a8edea 0%, #fed6e3 100%)",
+        bg="radial-gradient(circle at 22% 11%,rgba(62, 180, 137,.20),hsla(40,0%,60%,0) 49%)",
     )
 
 
