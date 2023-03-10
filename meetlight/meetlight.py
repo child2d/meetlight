@@ -23,18 +23,24 @@ meet_center_style = {
 class State(pc.State):
     """The app state."""
 
+    prompt_id = ""
     prompt = ""
     reply_msg = ""
+    square_reload = False
     show: bool = False
 
     def notice(self):
         self.show = not self.show
+
+    def reload_square(self):
+        self.square_reload = not self.square_reload
 
     def color_change(self):
         pass
 
     def submit_chat(self):
         add_message(self.prompt, "red")
+        self.prompt = ""
 
     def submit_reply(self, uuid, content, color):
         pass
@@ -110,7 +116,7 @@ def get_square_data():
         }
 
     pc_list = []
-    for message in messages.values():
+    for prompt_id, message in reversed(messages.items()):
         pc_list.append(
             pc.list_item(
                 pc.popover(
@@ -120,7 +126,7 @@ def get_square_data():
                                 pc.stat_label(message["content"]),
                                 pc.stat_help_text(message["created_at"], color="gray"),
                                 style=get_text_style(message["color"]),
-                            )
+                            ),
                         )
                     ),
                     pc.popover_content(
@@ -163,7 +169,7 @@ def init_reply_footer():
                     pc.modal_content(
                         pc.modal_header("notice"),
                         pc.modal_body("your message has been sent ^_^"),
-                        pc.modal_footer(pc.button("Close", on_click=State.notice)),
+                        pc.modal_footer(pc.button("close", on_click=State.notice)),
                     )
                 ),
                 is_open=State.show,
@@ -181,7 +187,7 @@ def get_reply_data(message):
                     reply["content"],
                     variant="solid",
                     color_scheme=reply["color"],
-                    font_size="1.5em",
+                    font_size="1em",
                 ),
             )
         )
@@ -196,6 +202,7 @@ def get_chat_data():
             height="100%",
         ),
         pc.input(
+            value=State.prompt,
             placeholder="wanna say something?",
             font_size="10px",
             on_change=State.set_prompt,
@@ -217,7 +224,7 @@ def get_chat_data():
                     pc.modal_content(
                         pc.modal_header("notice"),
                         pc.modal_body("your message has been sent ^_^"),
-                        pc.modal_footer(pc.button("Close", on_click=State.notice)),
+                        pc.modal_footer(pc.button("close", on_click=[State.notice, ])),
                     )
                 ),
                 is_open=State.show,
@@ -233,6 +240,6 @@ app = pc.App(
         "https://fonts.googleapis.com/css2?family=Silkscreen&display=swap",
     ],
 )
-app.add_page(index, title="MeetLight1")
+app.add_page(index, title="MeetLight")
 app.add_page(meet, title="MeetLight")
 app.compile()
